@@ -1,6 +1,9 @@
 package org.launchcode.techjobs.persistent.controllers;
 
 import org.launchcode.techjobs.persistent.models.Job;
+import org.launchcode.techjobs.persistent.models.data.EmployerRepository;
+import org.launchcode.techjobs.persistent.models.data.SkillRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -15,6 +18,12 @@ import java.util.List;
 @Controller
 public class HomeController {
 
+    @Autowired
+    private EmployerRepository employerRepository;
+
+    @Autowired
+    private SkillRepository skillRepository;
+
     @RequestMapping("")
     public String index(Model model) {
 
@@ -23,10 +32,15 @@ public class HomeController {
         return "index";
     }
 
+    // add employers with .findAll on the repository
+    // instructions didnt call for the skills, but I had an whitepage error
+    // adding skills got rid of the error
     @GetMapping("add")
     public String displayAddJobForm(Model model) {
         model.addAttribute("title", "Add Job");
         model.addAttribute(new Job());
+        model.addAttribute("employers", employerRepository.findAll());
+        model.addAttribute("skills", skillRepository.findAll());
         return "add";
     }
 
@@ -38,6 +52,13 @@ public class HomeController {
             model.addAttribute("title", "Add Job");
             return "add";
         }
+
+        // how to save both employer and skills to a new Job instance?
+        // use setters in Job class to set the employer, and skills
+        // after they are set, just do something with jobRepository.save(newJob)?
+
+
+
 
         return "redirect:";
     }
