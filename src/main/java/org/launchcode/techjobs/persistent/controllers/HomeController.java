@@ -1,7 +1,10 @@
 package org.launchcode.techjobs.persistent.controllers;
 
+import org.launchcode.techjobs.persistent.models.Employer;
 import org.launchcode.techjobs.persistent.models.Job;
+import org.launchcode.techjobs.persistent.models.Skill;
 import org.launchcode.techjobs.persistent.models.data.EmployerRepository;
+import org.launchcode.techjobs.persistent.models.data.JobRepository;
 import org.launchcode.techjobs.persistent.models.data.SkillRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by LaunchCode
@@ -23,6 +27,9 @@ public class HomeController {
 
     @Autowired
     private SkillRepository skillRepository;
+
+    @Autowired
+    private JobRepository jobRepository;
 
     @RequestMapping("")
     public String index(Model model) {
@@ -57,11 +64,27 @@ public class HomeController {
         // use setters in Job class to set the employer, and skills
         // after they are set, just do something with jobRepository.save(newJob)?
 
+        // replace the model.addAttribute with newJob.setEmployer(employer)
 
+//        Optional optEmployer = employerRepository.findById(employerId); // taking in the methods argument)
+//        if (optEmployer.isPresent()) {
+//            Employer employer = (Employer) optEmployer.get();
+//            model.addAttribute("employer", employer);
 
+        Optional optEmployer = employerRepository.findById(employerId); // i really dont understand this code, but it works
+        if (optEmployer.isPresent()) {
+            Employer employer = (Employer) optEmployer.get();
+            newJob.setEmployer(employer);
+        }
 
-        return "redirect:";
-    }
+        List<Skill> skillList = (List<Skill>) skillRepository.findAllById(skills);
+        newJob.setSkills(skillList);
+
+        jobRepository.save(newJob);
+
+            return "redirect:";
+        }
+
 
     @GetMapping("view/{jobId}")
     public String displayViewJob(Model model, @PathVariable int jobId) {

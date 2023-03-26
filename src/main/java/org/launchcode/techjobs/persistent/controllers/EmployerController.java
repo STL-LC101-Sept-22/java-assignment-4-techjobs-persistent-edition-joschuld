@@ -45,7 +45,7 @@ public class EmployerController {
     @GetMapping("view/{employerId}")
     public String displayViewEmployer(Model model, @PathVariable int employerId) {
 
-
+// dont really get the Optional stuff
 //        Optional optEmployer = null; change to
         Optional optEmployer = employerRepository.findById(employerId); // taking in the methods argument)
         if (optEmployer.isPresent()) {
