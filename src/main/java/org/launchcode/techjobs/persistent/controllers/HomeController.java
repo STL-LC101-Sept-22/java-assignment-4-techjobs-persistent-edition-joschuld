@@ -35,13 +35,12 @@ public class HomeController {
     public String index(Model model) {
 
         model.addAttribute("title", "My Jobs");
+        model.addAttribute("jobs", jobRepository.findAll());
 
         return "index";
     }
 
     // add employers with .findAll on the repository
-    // instructions didnt call for the skills, but I had an whitepage error
-    // adding skills got rid of the error
     @GetMapping("add")
     public String displayAddJobForm(Model model) {
         model.addAttribute("title", "Add Job");
@@ -88,8 +87,15 @@ public class HomeController {
 
     @GetMapping("view/{jobId}")
     public String displayViewJob(Model model, @PathVariable int jobId) {
+        Optional optJob = jobRepository.findById(jobId);
+        if (optJob.isPresent()){
+            Job job = (Job) optJob.get();
+            model.addAttribute("job", job);
+            return "view";
+        } else {
+            return "redirect:../";}
 
-        return "view";
+//        return "view";
     }
 
 
